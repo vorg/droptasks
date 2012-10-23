@@ -183,8 +183,8 @@ window.addEventListener('keydown', function(e) {
     case 46: //DEL
       if (!state.editMode) {
         var nodeToDelete = state.currentNode;
-        selectPrevNode(state.currentNode);
-        if (state.currentNode == nodeToDelete) selectNextNode(state.currentNode);
+        selectNextNode(state.currentNode);
+        if (state.currentNode == nodeToDelete) selectPrevNode(state.currentNode);
         if (state.currentNode == nodeToDelete) state.currentNode = null;
         deleteNode(nodeToDelete);
         e.preventDefault();
@@ -257,6 +257,7 @@ function selectNextNode(node) {
 
 function deleteNode(deleteNode) {
   deleteNode.remove();
+  reflow();
 }
 
 $(document).ready(init);
