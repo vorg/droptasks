@@ -125,16 +125,16 @@ window.addEventListener('keydown', function(e) {
     //  }
     //  e.preventDefault();
     //break;
-    //case 13: //Enter
-    //  if (state.editMode) {
-    //    exitEditNode(state.currentNode);
-    //  }
+    case 13: //Enter
+      if (state.editMode) {
+        exitEditNode(state.currentNode);
+      }
     //  else {
     //    selectNode(addSiblingNode(state.currentNode));
     //    editNode(state.currentNode);
     //  }
     //  e.preventDefault();
-    //break;
+      break;
     case 37: //Left
       if (!state.editMode) {
         selectNodeOnTheLeft(state.currentNode);
@@ -175,13 +175,13 @@ window.addEventListener('keydown', function(e) {
         e.preventDefault();
       }
       break;
-    //case 27: //ESC
-    //  if (state.editMode) {
-    //    state.currentNode.find("> span").text(state.editModePrevText);
-    //    exitEditNode(state.currentNode);
-    //    e.preventDefault();
-    //  }
-    //break;
+    case 27: //ESC
+      if (state.editMode) {
+        state.currentNode.text(state.editModePrevText);
+        exitEditNode(state.currentNode);
+        e.preventDefault();
+      }
+      break;
     case 46: //DEL
       if (!state.editMode) {
         var nodeToDelete = state.currentNode;
@@ -192,12 +192,12 @@ window.addEventListener('keydown', function(e) {
         e.preventDefault();
       }
       break;
-    //case 113: //F2
-    //  if (!state.editMode) {
-    //    editNode(state.currentNode);
-    //    e.preventDefault();
-    //  }
-    //break;
+    case 113: //F2
+      if (!state.editMode) {
+        editNode(state.currentNode);
+        e.preventDefault();
+      }
+      break;
   }//
 });
 
@@ -280,6 +280,21 @@ function selectNodeOnTheRight(node) {
 function deleteNode(deleteNode) {
   deleteNode.remove();
   reflow();
+}
+
+function editNode(node) {
+  node.attr("contentEditable", "").focus();
+  if (node.text() == "-") {
+    node.text("");
+  }
+  selectElementText(node.get(0));
+  state.editMode = true;
+  state.editModePrevText = node.text();
+}
+
+function exitEditNode(node) {
+  selectNode(state.currentNode); //cancels edit mode
+  state.editMode = false;
 }
 
 $(document).ready(init);
