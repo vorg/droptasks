@@ -181,14 +181,16 @@ window.addEventListener('keydown', function(e) {
     //    e.preventDefault();
     //  }
     //break;
-    //case 46: //DEL
-    //  if (!state.editMode) {
-    //    var nodeToDelete = state.currentNode;
-    //    selectPrevNode(state.currentNode);
-    //    deleteNode(nodeToDelete);
-    //    e.preventDefault();
-    //  }
-    //break;
+    case 46: //DEL
+      if (!state.editMode) {
+        var nodeToDelete = state.currentNode;
+        selectPrevNode(state.currentNode);
+        if (state.currentNode == nodeToDelete) selectNextNode(state.currentNode);
+        if (state.currentNode == nodeToDelete) state.currentNode = null;
+        deleteNode(nodeToDelete);
+        e.preventDefault();
+      }
+      break;
     //case 113: //F2
     //  if (!state.editMode) {
     //    editNode(state.currentNode);
@@ -253,6 +255,11 @@ function selectNextNode(node) {
     //}
   }
 }
+
+function deleteNode(deleteNode) {
+  deleteNode.remove();
+}
+
 $(document).ready(init);
 </script>
 </head>
