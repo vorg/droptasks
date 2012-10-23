@@ -13,15 +13,15 @@
 //var win = gui.Window.get();
 //win.enterFullscreen();
 
-var itemTmpl;
-var items = [];
+var nodeTmpl;
+var nodes = [];
 
 var state = {
-  currentNode: null
+  cur: null
 }
 
 function init() {
-  itemTmpl = $("#itemTmpl").html();
+  nodeTmpl = $("#nodeTmpl").html();
   loadTaskFile("file:///Users/vorg/Dropbox/Tasks/tasks.taskpaper");
   //loadTaskFile("/Users/vorg/Dropbox/Tasks/stuff.taskpaper");
 
@@ -34,14 +34,18 @@ function loadTaskFile(file) {
   })
 }
 
-function addItem(text, classNames) {
-  var item = {
+function createNode(text, classNames) {
+  var node = {
     text : text,
     element : null
   };
-  item.element = $($.mustache(itemTmpl, { text : item.text, className : classNames.join(" ") }));
-  items.push(item);
-  $(".column").eq(0).append(item.element);
+  node.element = $($.mustache(nodeTmpl, { text : node.text, className : classNames.join(" ") }));
+  nodes.push(node);
+  $(".column").eq(0).append(node.element);
+}
+
+function addNodeAfter() {
+
 }
 
 function parseTaskFile(file, data) {
@@ -49,13 +53,13 @@ function parseTaskFile(file, data) {
   var title = file.substr(file.lastIndexOf("/")+1);
   var container = "";
 
-  var itemsInProject = 0;
+  var nodesInProject = 0;
   for(var i in lines) {
     var line = lines[i].trim();
     if (line.length == 0) continue;
     if (line.trim().lastIndexOf(":") == line.length - 1) {
       var projectName = line.substr(0, line.length-1);
-      addItem(projectName, ["project"]);
+      createNode(projectName, ["project"]);
     }
     else {
       var classNames = [];
@@ -64,7 +68,7 @@ function parseTaskFile(file, data) {
       task =  task.replace(/(@[^(\s]+\(*[^)]*\)*)/, "<span class='tag'>$1</span>");
       var tags = task.match(/(?:@)[a-zA-Z0-9\-]+/g)
       if (tags) classNames =  classNames.concat(tags.map(function(tag) { return tag.replace("@", "")} ));
-      addItem(task, classNames);
+      createNode(task, classNames);
     }
   }
   setTimeout("reflow()", 100);
@@ -74,12 +78,12 @@ function reflow() {
   var currentColumn = 0;
   var numColumns = $(".column").size();
   var columnHeight = $(".column").eq(0).height() - 60;
-  var itemsInColumnHeight = 0;
+  var nodesInColumnHeight = 0;
   var column = $(".column").eq(currentColumn);
 
-  items.forEach(function(item) {
-    var itemHeight = $(item.element).height() + 2 * 5 + 1;
-    if (itemsInColumnHeight + itemHeight >= columnHeight) {
+  nodes.forEach(function(node) {
+    var nodeHeight = $(node.element).height() + 2 * 5 + 1;
+    if (nodesInColumnHeight + nodeHeight >= columnHeight) {
       ++currentColumn;
       if (currentColumn >= numColumns) {
         var newColumn = $('<ul class="column"></ul>');
@@ -88,10 +92,10 @@ function reflow() {
         $("body").css("width", (numColumns * 240) + "px");
       }
       column = $(".column").eq(currentColumn);
-      itemsInColumnHeight = 0;
+      nodesInColumnHeight = 0;
     }
-    column.append(item.element);
-    itemsInColumnHeight += itemHeight;
+    column.append(node.element);
+    nodesInColumnHeight += nodeHeight;
   });
 }
 
@@ -211,8 +215,8 @@ function selectNode(node) {
 $(document).ready(init);
 </script>
 </head>
-<script type="text/tmpl" id="itemTmpl">
-  <li class="item {{className}}">{{{text}}}</li>
+<script type="text/tmpl" id="nodeTmpl">
+  <li class="node {{className}}">{{{text}}}</li>
 </script>
 <body>
   <ul class="column"></ul>

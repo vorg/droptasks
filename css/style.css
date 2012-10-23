@@ -19,7 +19,7 @@ html, body {
   background: #FFFFFF;
 }
 
-.item {
+.node {
   width: 100%;
   display: block;
   background: #FFFFFF;
@@ -31,15 +31,15 @@ html, body {
   text-overflow: ellipsis;
 }
 
-.item.project {
+.node.project {
   padding: 5px 3px 5px 3px;
 }
 
-.item + .project {
+.node + .project {
   xmargin-top: 10px;
 }
 
-.item.done {
+.node.done {
   text-decoration: line-through;
   color: #999999;
 }
