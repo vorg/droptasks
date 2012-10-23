@@ -135,12 +135,12 @@ window.addEventListener('keydown', function(e) {
     //  }
     //  e.preventDefault();
     //break;
-    //case 37: //Left
-    //  if (!state.editMode) {
-    //    selectParentNode(state.currentNode);
-    //    e.preventDefault();
-    //  }
-    //break;
+    case 37: //Left
+      if (!state.editMode) {
+        selectNodeOnTheLeft(state.currentNode);
+        e.preventDefault();
+      }
+     break;
     case 38: //Up
       if (!state.editMode) {
     //    if (e.metaKey) { //move up
@@ -155,12 +155,12 @@ window.addEventListener('keydown', function(e) {
         e.preventDefault();
       }
       break;
-    //case 39: //Right
-    //  if (!state.editMode) {
-    //    selectChildNode(state.currentNode);
-    //    e.preventDefault();
-    //  }
-    //break;
+    case 39: //Right
+      if (!state.editMode) {
+        selectNodeOnTheRight(state.currentNode);
+        e.preventDefault();
+      }
+      break;
     case 40: //Down
       if (!state.editMode) {
         //if (e.metaKey) { //move up
