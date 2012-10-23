@@ -224,20 +224,6 @@ function selectPrevNode(node) {
       selectNode(node.parent().prev().children().last());
     }
   }
-  //else {
-    //selectParentNode(node);
-    //}
-  //else {
-  //  //find next node on the same level
-  //  var level = getNodeLevel(node);
-  //  var nextNode = findPrevNodeOnLevel(node, level);
-  //  if (nextNode) {
-  //      selectNode(nextNode);
-  //  }
-  //  else {
-  //    selectParentNode(node);
-  //  }
-  //}
 }
 
 function selectNextNode(node) {
@@ -248,12 +234,6 @@ function selectNextNode(node) {
     if (node.parent().next().children().size() > 0) {
       selectNode(node.parent().next().children().first());
     }
-    ////find next node on the same level
-    //var level = getNodeLevel(node);
-    //var nextNode = findNextNodeOnLevel(node, level);
-    //if (nextNode) {
-    //    selectNode(nextNode);
-    //}
   }
 }
 
