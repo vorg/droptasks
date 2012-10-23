@@ -39,7 +39,7 @@ function createNode(text, classNames) {
     selectNode(node);
   })
   //we have to add it to dom so we can measure it's size with CSS applied
-  $(".column").eq(0).prepend(node);
+  $(".column").eq(0).append(node);
 }
 
 function addNodeAfter() {
