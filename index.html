@@ -35,13 +35,13 @@ function loadTaskFile(file) {
 }
 
 function createNode(text, classNames) {
-  var node = {
-    text : text,
-    element : null
-  };
-  node.element = $($.mustache(nodeTmpl, { text : node.text, className : classNames.join(" ") }));
+  var node = $($.mustache(nodeTmpl, { text : text, className : classNames.join(" ") }));
+  node.click(function() {
+    selectNode(node);
+  })
   nodes.push(node);
-  $(".column").eq(0).append(node.element);
+  //we have to add it to dom so we can measure it's size with CSS applied
+  $(".column").eq(0).prepend(node);
 }
 
 function addNodeAfter() {
@@ -82,7 +82,7 @@ function reflow() {
   var column = $(".column").eq(currentColumn);
 
   nodes.forEach(function(node) {
-    var nodeHeight = $(node.element).height() + 2 * 5 + 1;
+    var nodeHeight = node.height() + 2 * 5 + 1;
     if (nodesInColumnHeight + nodeHeight >= columnHeight) {
       ++currentColumn;
       if (currentColumn >= numColumns) {
@@ -94,7 +94,7 @@ function reflow() {
       column = $(".column").eq(currentColumn);
       nodesInColumnHeight = 0;
     }
-    column.append(node.element);
+    column.append(node);
     nodesInColumnHeight += nodeHeight;
   });
 }
@@ -140,8 +140,8 @@ window.addEventListener('keydown', function(e) {
     //    e.preventDefault();
     //  }
     //break;
-    //case 38: //Up
-    //  if (!state.editMode) {
+    case 38: //Up
+      if (!state.editMode) {
     //    if (e.metaKey) { //move up
     //      var prev = state.currentNode.prev();
     //      if (prev.size() > 0) {
@@ -149,31 +149,31 @@ window.addEventListener('keydown', function(e) {
     //      }
     //    }
     //    else {
-    //      selectPrevNode(state.currentNode);
+            selectPrevNode(state.currentNode);
     //    }
-    //    e.preventDefault();
-    //  }
-    //break;
+        e.preventDefault();
+      }
+      break;
     //case 39: //Right
     //  if (!state.editMode) {
     //    selectChildNode(state.currentNode);
     //    e.preventDefault();
     //  }
     //break;
-    //case 40: //Down
-    //  if (!state.editMode) {
-    //    if (e.metaKey) { //move up
-    //      var next = state.currentNode.next();
-    //      if (next.size() > 0) {
-    //        next.after(state.currentNode);
-    //      }
-    //    }
-    //    else {
-    //        selectNextNode(state.currentNode);
-    //    }
-    //    e.preventDefault();
-    //  }
-    //break;
+    case 40: //Down
+      if (!state.editMode) {
+        //if (e.metaKey) { //move up
+        //  var next = state.currentNode.next();
+        //  if (next.size() > 0) {
+        //    next.after(state.currentNode);
+        //  }
+        //}
+        //else {
+            selectNextNode(state.currentNode);
+        //}
+        e.preventDefault();
+      }
+      break;
     //case 27: //ESC
     //  if (state.editMode) {
     //    state.currentNode.find("> span").text(state.editModePrevText);
@@ -196,7 +196,7 @@ window.addEventListener('keydown', function(e) {
     //  }
     //break;
   }//
-})
+});
 
 function selectNode(node) {
   if (state.currentNode != null) {
@@ -212,6 +212,47 @@ function selectNode(node) {
   state.currentNode.addClass("current");
 }
 
+function selectPrevNode(node) {
+  if (node.index() > 0) {
+    selectNode(node.prev());
+  }
+  else if (node.parent().index() > 0) {
+    if (node.parent().prev().children().size() > 0) {
+      selectNode(node.parent().prev().children().last());
+    }
+  }
+  //else {
+    //selectParentNode(node);
+    //}
+  //else {
+  //  //find next node on the same level
+  //  var level = getNodeLevel(node);
+  //  var nextNode = findPrevNodeOnLevel(node, level);
+  //  if (nextNode) {
+  //      selectNode(nextNode);
+  //  }
+  //  else {
+  //    selectParentNode(node);
+  //  }
+  //}
+}
+
+function selectNextNode(node) {
+  if (node.index() < node.parent().children().size() - 1) {
+    selectNode(node.next());
+  }
+  else if (node.parent().index() < node.parent().parent().children().size() -1) {
+    if (node.parent().next().children().size() > 0) {
+      selectNode(node.parent().next().children().first());
+    }
+    ////find next node on the same level
+    //var level = getNodeLevel(node);
+    //var nextNode = findNextNodeOnLevel(node, level);
+    //if (nextNode) {
+    //    selectNode(nextNode);
+    //}
+  }
+}
 $(document).ready(init);
 </script>
 </head>

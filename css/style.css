@@ -44,6 +44,10 @@ html, body {
   color: #999999;
 }
 
+.node.current {
+  background: #FFFFDD;
+}
+
 .tag {
   color: #CCCCCC;
 }
