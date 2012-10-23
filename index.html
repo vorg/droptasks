@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" type="text/css" href="css/reset.css"/>
+<link rel="stylesheet" type="text/css" href="css/style.css"/>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery.mustache.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="text/javascript">
+
+//var gui = require('nw.gui');
+//var win = gui.Window.get();
+//win.enterFullscreen();
+
+var itemTmpl;
+var items = [];
+
+var state = {
+  currentNode: null
+}
+
+function init() {
+  itemTmpl = $("#itemTmpl").html();
+  loadTaskFile("file:///Users/vorg/Dropbox/Tasks/tasks.taskpaper");
+  //loadTaskFile("/Users/vorg/Dropbox/Tasks/stuff.taskpaper");
+
+  //Window.enterFullscreen();
+}
+
+function loadTaskFile(file) {
+  $.get(file, function(data) {
+    parseTaskFile(file, data);
+  })
+}
+
+function addItem(text, classNames) {
+  var item = {
+    text : text,
+    element : null
+  };
+  item.element = $($.mustache(itemTmpl, { text : item.text, className : classNames.join(" ") }));
+  items.push(item);
+  $(".column").eq(0).append(item.element);
+}
+
+function parseTaskFile(file, data) {
+  var lines = data.split("\n");
+  var title = file.substr(file.lastIndexOf("/")+1);
+  var container = "";
+
+  var itemsInProject = 0;
+  for(var i in lines) {
+    var line = lines[i].trim();
+    if (line.length == 0) continue;
+    if (line.trim().lastIndexOf(":") == line.length - 1) {
+      var projectName = line.substr(0, line.length-1);
+      addItem(projectName, ["project"]);
+    }
+    else {
+      var classNames = [];
+      var task = line;
+      task = task.replace(/\s*-\s*/, "");
+      task =  task.replace(/(@[^(\s]+\(*[^)]*\)*)/, "<span class='tag'>$1</span>");
+      var tags = task.match(/(?:@)[a-zA-Z0-9\-]+/g)
+      if (tags) classNames =  classNames.concat(tags.map(function(tag) { return tag.replace("@", "")} ));
+      addItem(task, classNames);
+    }
+  }
+  setTimeout("reflow()", 100);
+}
+
+function reflow() {
+  var currentColumn = 0;
+  var numColumns = $(".column").size();
+  var columnHeight = $(".column").eq(0).height() - 60;
+  var itemsInColumnHeight = 0;
+  var column = $(".column").eq(currentColumn);
+
+  items.forEach(function(item) {
+    var itemHeight = $(item.element).height() + 2 * 5 + 1;
+    if (itemsInColumnHeight + itemHeight >= columnHeight) {
+      ++currentColumn;
+      if (currentColumn >= numColumns) {
+        var newColumn = $('<ul class="column"></ul>');
+        $("body").append(newColumn);
+        ++numColumns;
+        $("body").css("width", (numColumns * 240) + "px");
+      }
+      column = $(".column").eq(currentColumn);
+      itemsInColumnHeight = 0;
+    }
+    column.append(item.element);
+    itemsInColumnHeight += itemHeight;
+  });
+}
+
+window.addEventListener('keydown', function(e) {
+  //state.edited = true;
+
+  if (e.ctrlKey) {
+    var c = String.fromCharCode(e.charCode || e.keyCode);
+    switch(c) {
+      //case 'S': saveData(); break;
+      //case 'L': loadData(); break;
+    }
+    e.preventDefault();
+    return;
+  }
+
+  switch(e.keyCode) {
+    //case 9: //Tab
+    //  if (e.shiftKey) {
+    //    selectParentNode(state.currentNode);
+    //    editNode(state.currentNode);
+    //  }
+    //  else {
+    //    selectNode(addChildNode(state.currentNode));
+    //    editNode(state.currentNode);
+    //  }
+    //  e.preventDefault();
+    //break;
+    //case 13: //Enter
+    //  if (state.editMode) {
+    //    exitEditNode(state.currentNode);
+    //  }
+    //  else {
+    //    selectNode(addSiblingNode(state.currentNode));
+    //    editNode(state.currentNode);
+    //  }
+    //  e.preventDefault();
+    //break;
+    //case 37: //Left
+    //  if (!state.editMode) {
+    //    selectParentNode(state.currentNode);
+    //    e.preventDefault();
+    //  }
+    //break;
+    //case 38: //Up
+    //  if (!state.editMode) {
+    //    if (e.metaKey) { //move up
+    //      var prev = state.currentNode.prev();
+    //      if (prev.size() > 0) {
+    //        prev.before(state.currentNode);
+    //      }
+    //    }
+    //    else {
+    //      selectPrevNode(state.currentNode);
+    //    }
+    //    e.preventDefault();
+    //  }
+    //break;
+    //case 39: //Right
+    //  if (!state.editMode) {
+    //    selectChildNode(state.currentNode);
+    //    e.preventDefault();
+    //  }
+    //break;
+    //case 40: //Down
+    //  if (!state.editMode) {
+    //    if (e.metaKey) { //move up
+    //      var next = state.currentNode.next();
+    //      if (next.size() > 0) {
+    //        next.after(state.currentNode);
+    //      }
+    //    }
+    //    else {
+    //        selectNextNode(state.currentNode);
+    //    }
+    //    e.preventDefault();
+    //  }
+    //break;
+    //case 27: //ESC
+    //  if (state.editMode) {
+    //    state.currentNode.find("> span").text(state.editModePrevText);
+    //    exitEditNode(state.currentNode);
+    //    e.preventDefault();
+    //  }
+    //break;
+    //case 46: //DEL
+    //  if (!state.editMode) {
+    //    var nodeToDelete = state.currentNode;
+    //    selectPrevNode(state.currentNode);
+    //    deleteNode(nodeToDelete);
+    //    e.preventDefault();
+    //  }
+    //break;
+    //case 113: //F2
+    //  if (!state.editMode) {
+    //    editNode(state.currentNode);
+    //    e.preventDefault();
+    //  }
+    //break;
+  }//
+})
+
+function selectNode(node) {
+  if (state.currentNode != null) {
+    if (state.editMode && !state.currentNode.text().trim()) {
+      state.currentNode.text("-");
+      state.editMode = false;
+    }
+    state.currentNode.removeAttr("contenteditable");
+    state.currentNode.blur();
+    state.currentNode.removeClass("current");
+  }
+  state.currentNode = node;
+  state.currentNode.addClass("current");
+}
+
+$(document).ready(init);
+</script>
+</head>
+<script type="text/tmpl" id="itemTmpl">
+  <li class="item {{className}}">{{{text}}}</li>
+</script>
+<body>
+  <ul class="column"></ul>
+  <ul class="column"></ul>
+  <ul class="column"></ul>
+  <ul class="column"></ul>
+  <ul class="column"></ul>
+  <ul class="column"></ul>
+</body>
+</html>

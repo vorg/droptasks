@@ -1,0 +1,49 @@
+html, body {
+  height: 100%;
+  font-family: "Open Sans";
+  font-size: 0.9em;
+  background: #F1F1F1;
+}
+
+.column {
+  height: 100%;
+  width: 235px;
+  margin-right: 5px;
+  float: left;
+  xoverflow: hidden;
+}
+
+.project {
+  font-weight: bold;
+  xfont-size: 150%;
+  background: #FFFFFF;
+}
+
+.item {
+  width: 100%;
+  display: block;
+  background: #FFFFFF;
+  margin-bottom: 1px;
+  padding: 5px 3px 5px 12px;
+  box-sizing: border-box;
+  line-height: 150%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item.project {
+  padding: 5px 3px 5px 3px;
+}
+
+.item + .project {
+  xmargin-top: 10px;
+}
+
+.item.done {
+  text-decoration: line-through;
+  color: #999999;
+}
+
+.tag {
+  color: #CCCCCC;
+}

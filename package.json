@@ -1,0 +1,10 @@
+{
+  "name": "drop-tasks",
+  "main": "index.html",
+  "window": {
+    "frame": false,
+    "toolbar" : false,
+    "width" : 1440,
+    "height" : 850
+  }
+}
