@@ -111,6 +111,8 @@ window.addEventListener('keydown', function(e) {
     return;
   }
 
+  if (state.currentNode == null) return;
+
   switch(e.keyCode) {
     //case 9: //Tab
     //  if (e.shiftKey) {
