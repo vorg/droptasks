@@ -14,7 +14,6 @@
 //win.enterFullscreen();
 
 var nodeTmpl;
-var nodes = [];
 
 var state = {
   cur: null
@@ -39,7 +38,6 @@ function createNode(text, classNames) {
   node.click(function() {
     selectNode(node);
   })
-  nodes.push(node);
   //we have to add it to dom so we can measure it's size with CSS applied
   $(".column").eq(0).prepend(node);
 }
@@ -81,7 +79,8 @@ function reflow() {
   var nodesInColumnHeight = 0;
   var column = $(".column").eq(currentColumn);
 
-  nodes.forEach(function(node) {
+  $(".node").each(function() {
+    var node = $(this);
     var nodeHeight = node.height() + 2 * 5 + 1;
     if (nodesInColumnHeight + nodeHeight >= columnHeight) {
       ++currentColumn;
