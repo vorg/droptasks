@@ -39,6 +39,11 @@ html, body {
   xmargin-top: 10px;
 }
 
+.node.next {
+  xcolor: #44BBDD;
+  color: #22DD77;
+}
+
 .node.done {
   text-decoration: line-through;
   color: #999999;
