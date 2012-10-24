@@ -283,6 +283,7 @@ function deleteNode(deleteNode) {
   reflow();
 }
 
+//TODO: editNode() remove tag spans before making node contentEditable
 function editNode(node) {
   node.attr("contentEditable", "").focus();
   if (node.text() == "-") {
