@@ -5,12 +5,15 @@ html, body {
   background: #F1F1F1;
 }
 
-.column {
+.columns {
   height: 100%;
-  width: 235px;
-  margin-right: 5px;
-  float: left;
-  xoverflow: hidden;
+  width: 100%;
+  columns: 235px;
+  -webkit-columns: 235px;
+  -moz-columns: 235px;
+  column-gap: 5px;
+  -moz-column-gap: 5px;
+  -webkit-column-gap: 5px;
 }
 
 .project {
@@ -21,11 +24,12 @@ html, body {
 
 .node {
   width: 100%;
-  display: block;
+  display: inline-block;
   background: #FFFFFF;
   margin-bottom: 1px;
   padding: 5px 3px 5px 12px;
   box-sizing: border-box;
+  -moz-box-sizing: border-box;
   line-height: 150%;
   overflow: hidden;
   text-overflow: ellipsis;

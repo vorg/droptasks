@@ -39,7 +39,7 @@ function createNode(text, classNames) {
     selectNode(node);
   })
   //we have to add it to dom so we can measure it's size with CSS applied
-  $(".column").eq(0).append(node);
+  $(".columns").eq(0).append(node);
 }
 
 function addNodeAfter() {
@@ -70,33 +70,6 @@ function parseTaskFile(file, data) {
     }
   }
   selectNode($(".node").eq(0));
-  setTimeout("reflow()", 100);
-}
-
-function reflow() {
-  var currentColumn = 0;
-  var numColumns = $(".column").size();
-  var columnHeight = $(".column").eq(0).height() - 60;
-  var nodesInColumnHeight = 0;
-  var column = $(".column").eq(currentColumn);
-
-  $(".node").each(function() {
-    var node = $(this);
-    var nodeHeight = node.height() + 2 * 5 + 1;
-    if (nodesInColumnHeight + nodeHeight >= columnHeight) {
-      ++currentColumn;
-      if (currentColumn >= numColumns) {
-        var newColumn = $('<ul class="column"></ul>');
-        $("body").append(newColumn);
-        ++numColumns;
-        $("body").css("width", (numColumns * 240) + "px");
-      }
-      column = $(".column").eq(currentColumn);
-      nodesInColumnHeight = 0;
-    }
-    column.append(node);
-    nodesInColumnHeight += nodeHeight;
-  });
 }
 
 window.addEventListener('keydown', function(e) {
@@ -306,11 +279,6 @@ $(document).ready(init);
   <li class="node {{className}}">{{{text}}}</li>
 </script>
 <body>
-  <ul class="column"></ul>
-  <ul class="column"></ul>
-  <ul class="column"></ul>
-  <ul class="column"></ul>
-  <ul class="column"></ul>
-  <ul class="column"></ul>
+  <ul class="columns"></ul>
 </body>
 </html>
