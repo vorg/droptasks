@@ -158,9 +158,16 @@ window.addEventListener('keydown', function(e) {
     case 46: //DEL
       if (!state.editMode) {
         var nodeToDelete = state.currentNode;
-        selectNextNode(state.currentNode);
-        if (state.currentNode == nodeToDelete) selectPrevNode(state.currentNode);
-        if (state.currentNode == nodeToDelete) state.currentNode = null;
+        if (nodeToDelete.hasClass("project")) {
+          selectNextNode(state.currentNode, ".project");
+          if (state.currentNode == nodeToDelete) selectPrevNode(state.currentNode);
+          if (state.currentNode == nodeToDelete) state.currentNode = null;
+        }
+        else {
+          selectNextNode(state.currentNode);
+          if (state.currentNode == nodeToDelete) selectPrevNode(state.currentNode);
+          if (state.currentNode == nodeToDelete) state.currentNode = null;
+        }
         deleteNode(nodeToDelete);
         e.preventDefault();
       }
@@ -188,15 +195,30 @@ function selectNode(node) {
   state.currentNode.addClass("current");
 }
 
-function selectPrevNode(node) {
-  if (node.index() > 0) {
-    selectNode(node.prev());
+function selectPrevNode(node, className) {
+  console.log("prev", node.prev());
+  var prev = null;
+  if (className) {
+    prev = node.prevAll(".project").eq(0);
+  }
+  else {
+    prev = node.prev();
+  }
+  if (prev.size() > 0) {
+    selectNode(prev);
   }
 }
 
-function selectNextNode(node) {
-  if (node.index() < node.parent().children().size() - 1) {
-    selectNode(node.next());
+function selectNextNode(node, className) {
+  var next = null;
+  if (className) {
+    next = node.nextAll(".project").eq(0);
+  }
+  else {
+    next = node.next();
+  }
+  if (next.size() > 0) {
+    selectNode(next);
   }
 }
 
@@ -249,7 +271,12 @@ function selectNodeOnTheRight(node) {
 }
 
 function deleteNode(deleteNode) {
-  deleteNode.remove();
+  if (deleteNode.hasClass("project")) {
+    deleteNode.nextUntil(".project").andSelf().remove();
+  }
+  else {
+    deleteNode.remove();
+  }
 }
 
 //TODO: editNode() remove tag spans before making node contentEditable
