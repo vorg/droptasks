@@ -192,61 +192,59 @@ function selectPrevNode(node) {
   if (node.index() > 0) {
     selectNode(node.prev());
   }
-  else if (node.parent().index() > 0) {
-    if (node.parent().prev().children().size() > 0) {
-      selectNode(node.parent().prev().children().last());
-    }
-  }
 }
 
 function selectNextNode(node) {
   if (node.index() < node.parent().children().size() - 1) {
     selectNode(node.next());
   }
-  else if (node.parent().index() < node.parent().parent().children().size() - 1) {
-    if (node.parent().next().children().size() > 0) {
-      selectNode(node.parent().next().children().first());
-    }
-  }
 }
 
 function selectNodeOnTheLeft(node) {
-  //we are not in the first column
-  if (node.parent().index() > 0) {
-    var yPos = node.position().top;
-    var closesDistance = -1;
-    var closestNode = null;
-    node.parent().prev().children().each(function() {
-      var siblingNode = $(this);
-      var siblingDistance = Math.abs(siblingNode.position().top - yPos);
-      if (closesDistance == -1 || siblingDistance < closesDistance) {
-        closestNode = siblingNode;
-        closesDistance = siblingDistance;
-      }
-    });
-    if (closestNode) {
-      selectNode(closestNode);
+  var yPos = node.position().top;
+  var sibling = node.prev();
+  var columns = 0;
+  var closesDistance = -1;
+  var closestNode = null;
+  while(sibling.size() > 0) {
+    var siblingY = sibling.position().top;
+    var siblingDistance = Math.abs(siblingY - yPos);
+    if (siblingY == 0) {
+      ++columns;
+      if (columns == 2) break;
     }
+    if (columns == 1 && closesDistance == -1 || siblingDistance < closesDistance) {
+      closestNode = sibling;
+      closesDistance = siblingDistance;
+    }
+    sibling = sibling.prev();
+  }
+  if (closestNode) {
+    selectNode(closestNode);
   }
 }
 
 function selectNodeOnTheRight(node) {
-  //we are not in the last column
-  if (node.parent().index() < node.parent().parent().children().size() - 1) {
-    var yPos = node.position().top;
-    var closesDistance = -1;
-    var closestNode = null;
-    node.parent().next().children().each(function() {
-      var siblingNode = $(this);
-      var siblingDistance = Math.abs(siblingNode.position().top - yPos);
-      if (closesDistance == -1 || siblingDistance < closesDistance) {
-        closestNode = siblingNode;
-        closesDistance = siblingDistance;
-      }
-    });
-    if (closestNode) {
-      selectNode(closestNode);
+  var yPos = node.position().top;
+  var sibling = node.next();
+  var columns = 0;
+  var closesDistance = -1;
+  var closestNode = null;
+  while(sibling.size() > 0) {
+    var siblingY = sibling.position().top;
+    var siblingDistance = Math.abs(siblingY - yPos);
+    if (siblingY == 0) {
+      ++columns;
+      if (columns >= 2) break;
     }
+    if (columns == 1 && closesDistance == -1 || siblingDistance < closesDistance) {
+      closestNode = sibling;
+      closesDistance = siblingDistance;
+    }
+    sibling = sibling.next();
+  }
+  if (closestNode) {
+    selectNode(closestNode);
   }
 }
 
