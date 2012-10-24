@@ -50,7 +50,7 @@ html, body {
 
 .node.done {
   text-decoration: line-through;
-  color: #999999;
+  color: #CCCCCC;
 }
 
 .node.current {
