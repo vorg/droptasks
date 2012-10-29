@@ -49,8 +49,9 @@ html, body {
 }
 
 .node.done {
-  text-decoration: line-through;
+  xtext-decoration: line-through;
   color: #CCCCCC;
+  font-size: 50%;
 }
 
 .node.current {
