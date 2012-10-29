@@ -101,6 +101,11 @@ window.addEventListener('keydown', function(e) {
     case 13: //Enter
       if (state.editMode) {
         exitEditNode(state.currentNode);
+        e.preventDefault();
+      }
+      else {
+        editNode(state.currentNode);
+        e.preventDefault();
       }
     //  else {
     //    selectNode(addSiblingNode(state.currentNode));
