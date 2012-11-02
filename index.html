@@ -292,6 +292,9 @@ function deleteNode(deleteNode) {
 
 //TODO: editNode() remove tag spans before making node contentEditable
 function editNode(node) {
+  if (node != state.selectNode) {
+    selectNode(node);
+  }
   node.attr("contentEditable", "").focus();
   if (node.text() == "-") {
     node.text("");
