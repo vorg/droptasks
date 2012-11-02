@@ -16,9 +16,10 @@
 var nodeTmpl;
 
 var state = {
+  prev: null,
   cur: null,
   undoStack: []
-}
+};
 
 function init() {
   nodeTmpl = $("#nodeTmpl").html();
@@ -30,10 +31,13 @@ function init() {
 function loadTaskFile(file) {
   $.get(file, function(data) {
     deserialize(data);
+    state.prev = data;
   })
 }
 
 function deserialize(data) {
+  $(".columns").empty();
+
   var lines = data.split("\n");
 
   var nodesInProject = 0;
@@ -218,7 +222,6 @@ function selectNode(node) {
 }
 
 function selectPrevNode(node, className) {
-  console.log("prev", node.prev());
   var prev = null;
   if (className) {
     prev = node.prevAll(".project").eq(0);
@@ -340,14 +343,20 @@ function serialize() {
 
 function undo() {
   if (state.undoStack.length > 0) {
-    var state = state.undoStack.pop();
-    saveChanges();
+    var prevState = state.undoStack.pop();
+    deserialize(prevState);
+    saveChanges({dontPush:true});
   }
 }
 
-function saveChanges() {
+function saveChanges(options) {
+  var dontPush = options && options.dontPush;
   var currentState = serialize();
-  state.undoStack.push(currentState);
+  if (!dontPush) {
+    state.undoStack.push(state.prev);
+    state.prev = currentState;
+  }
+  console.log("state.undoStack", state.undoStack.length);
   //$.post("?set", currentState);
 }
 
