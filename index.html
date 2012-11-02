@@ -199,7 +199,6 @@ function addNewNodeAfter(node, title, classNames) {
   var newNode = createNode(title || "", classNames || ["item"]);
   newNode.insertAfter(node);
   editNode(newNode);
-  saveChanges();
 }
 
 function addNewProjectNodeAfter(node) {
