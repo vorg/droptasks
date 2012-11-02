@@ -49,14 +49,10 @@ function deserialize(data) {
       createNode(projectName, ["project"]);
     }
     else {
-      var classNames = [];
       var task = line;
       task = task.replace(/\s*-\s*/, "");
-      task =  task.replace(/(@[^(\s]+\(*[^)]*\)*)/, "<span class='tag'>$1</span>");
-      if (!task) task = "-";
-      var tags = task.match(/(?:@)[a-zA-Z0-9\-]+/g)
-      if (tags) classNames =  classNames.concat(tags.map(function(tag) { return tag.replace("@", "")} ));
-      createNode(task, classNames);
+      var newNode = createNode(task, []);
+      parseNodeTags(newNode);
     }
   }
 }
@@ -323,6 +319,20 @@ function exitEditNode(node) {
   selectNode(state.currentNode); //cancels edit mode
   state.editMode = false;
   saveChanges();
+}
+
+function parseNodeTags(node) {
+  var task = node.text();
+  task = task.replace(/(@[^(\s]+\(*[^)]*\)*)/, "<span class='tag'>$1</span>");
+  if (!task) task = "-";
+  var tags = task.match(/(?:@)[a-zA-Z0-9\-]+/g);
+  var classNames = ["node"];
+  if (node.hasClass("project")) classNames.push("project");
+  if (tags) classNames =  classNames.concat(tags.map(function(tag) { return tag.replace("@", "")} ));
+  node.removeClass(node.attr("class"));
+  classNames.forEach(function(c) {
+    node.addClass(c);
+  })
 }
 
 function serialize() {
