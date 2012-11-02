@@ -16,7 +16,8 @@
 var nodeTmpl;
 
 var state = {
-  cur: null
+  cur: null,
+  undoStack: []
 }
 
 function init() {
@@ -28,14 +29,12 @@ function init() {
 
 function loadTaskFile(file) {
   $.get(file, function(data) {
-    parseTaskFile(file, data);
+    deserialize(data);
   })
 }
 
-
-function parseTaskFile(file, data) {
+function deserialize(data) {
   var lines = data.split("\n");
-  var title = file.substr(file.lastIndexOf("/")+1);
   var container = "";
 
   var nodesInProject = 0;
@@ -64,6 +63,7 @@ window.addEventListener('keydown', function(e) {
   if (e.ctrlKey) {
     var c = String.fromCharCode(e.charCode || e.keyCode);
     switch(c) {
+      case 'Z': undo(); break;
       //case 'S': saveData(); break;
       //case 'L': loadData(); break;
     }
@@ -339,8 +339,17 @@ function serialize() {
   return str;
 }
 
+function undo() {
+  if (state.undoStack.length > 0) {
+    var state = state.undoStack.pop();
+    saveChanges();
+  }
+}
+
 function saveChanges() {
-  $.post("?set", serialize());
+  var currentState = serialize();
+  state.undoStack.push(currentState);
+  //$.post("?set", currentState);
 }
 
 $(document).ready(init);
