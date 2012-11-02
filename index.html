@@ -367,7 +367,6 @@ function saveChanges(options) {
     state.undoStack.push(state.prev);
     state.prev = currentState;
   }
-  console.log("state.undoStack", state.undoStack.length);
   //$.post("?set", currentState);
 }
 
