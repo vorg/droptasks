@@ -202,7 +202,7 @@ function addNewNodeAfter(node, title, classNames) {
 }
 
 function addNewProjectNodeAfter(node) {
-  var lastNode = node.nextUntil(".project");
+  var lastNode = node.nextUntil(".project").last();
   if (lastNode.size() == 0) lastNode = node;
   addNewNodeAfter(lastNode, "New Project", ["item", "project"]);
 }
