@@ -49,6 +49,11 @@ function addNewNodeAfter(node) {
   var newNode = createNode("", ["item"]);
   newNode.insertAfter(node);
   editNode(newNode);
+  saveChanges();
+}
+
+function addNewProjectNodeAfter(node) {
+
 }
 
 function parseTaskFile(file, data) {
@@ -108,8 +113,12 @@ window.addEventListener('keydown', function(e) {
         exitEditNode(state.currentNode);
         e.preventDefault();
       }
+      else if (e.shiftKey) {
+        addNewProjectNodeAfter(state.currentNode);
+        e.preventDefault();
+      }
       else {
-        editNode(state.currentNode);
+        addNewNodeAfter(state.currentNode);
         e.preventDefault();
       }
     //  else {
