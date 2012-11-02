@@ -316,7 +316,8 @@ function editNode(node) {
 }
 
 function exitEditNode(node) {
-  selectNode(state.currentNode); //cancels edit mode
+  parseNodeTags(node);
+  selectNode(node); //cancels edit mode
   state.editMode = false;
   saveChanges();
 }
