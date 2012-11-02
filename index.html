@@ -37,13 +37,19 @@ function createNode(text, classNames) {
   var node = $($.mustache(nodeTmpl, { text : text, className : classNames.join(" ") }));
   node.click(function() {
     selectNode(node);
-  })
+  });
+  node.dblclick(function() {
+    editNode(node);
+  });
   //we have to add it to dom so we can measure it's size with CSS applied
   $(".columns").eq(0).append(node);
+  return node;
 }
 
-function addNodeAfter() {
-
+function addNewNodeAfter(node) {
+  var newNode = createNode("", ["item"]);
+  newNode.insertAfter(node);
+  editNode(newNode);
 }
 
 function parseTaskFile(file, data) {
