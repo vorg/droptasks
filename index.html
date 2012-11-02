@@ -53,6 +53,7 @@ function deserialize(data) {
       var task = line;
       task = task.replace(/\s*-\s*/, "");
       task =  task.replace(/(@[^(\s]+\(*[^)]*\)*)/, "<span class='tag'>$1</span>");
+      if (!task) task = "-";
       var tags = task.match(/(?:@)[a-zA-Z0-9\-]+/g)
       if (tags) classNames =  classNames.concat(tags.map(function(tag) { return tag.replace("@", "")} ));
       createNode(task, classNames);
