@@ -21,8 +21,7 @@ var state = {
 
 function init() {
   nodeTmpl = $("#nodeTmpl").html();
-  loadTaskFile("file:///Users/vorg/Dropbox/Tasks/tasks.taskpaper");
-  //loadTaskFile("/Users/vorg/Dropbox/Tasks/stuff.taskpaper");
+  loadTaskFile("http://localhost:3001/?get");
 
   //Window.enterFullscreen();
 }
@@ -288,6 +287,7 @@ function deleteNode(deleteNode) {
   else {
     deleteNode.remove();
   }
+  saveChanges();
 }
 
 //TODO: editNode() remove tag spans before making node contentEditable
@@ -307,6 +307,27 @@ function editNode(node) {
 function exitEditNode(node) {
   selectNode(state.currentNode); //cancels edit mode
   state.editMode = false;
+  saveChanges();
+}
+
+function serialize() {
+  var str = "";
+  $(".node").each(function() {
+    var value = $(this).text();;
+
+    if ($(this).hasClass("project")) {
+      str += value + ":";
+    }
+    else {
+      str += "\t- " + value;
+    }
+    str += "\n";
+  })
+  return str;
+}
+
+function saveChanges() {
+  $.post("?set", serialize());
 }
 
 $(document).ready(init);
