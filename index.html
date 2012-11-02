@@ -32,29 +32,6 @@ function loadTaskFile(file) {
   })
 }
 
-function createNode(text, classNames) {
-  var node = $($.mustache(nodeTmpl, { text : text, className : classNames.join(" ") }));
-  node.click(function() {
-    selectNode(node);
-  });
-  node.dblclick(function() {
-    editNode(node);
-  });
-  //we have to add it to dom so we can measure it's size with CSS applied
-  $(".columns").eq(0).append(node);
-  return node;
-}
-
-function addNewNodeAfter(node) {
-  var newNode = createNode("", ["item"]);
-  newNode.insertAfter(node);
-  editNode(newNode);
-  saveChanges();
-}
-
-function addNewProjectNodeAfter(node) {
-
-}
 
 function parseTaskFile(file, data) {
   var lines = data.split("\n");
@@ -199,6 +176,33 @@ window.addEventListener('keydown', function(e) {
       break;
   }//
 });
+
+
+function createNode(text, classNames) {
+  var node = $($.mustache(nodeTmpl, { text : text, className : classNames.join(" ") }));
+  node.click(function() {
+    selectNode(node);
+  });
+  node.dblclick(function() {
+    editNode(node);
+  });
+  //we have to add it to dom so we can measure it's size with CSS applied
+  $(".columns").eq(0).append(node);
+  return node;
+}
+
+function addNewNodeAfter(node, title, classNames) {
+  var newNode = createNode(title || "", classNames || ["item"]);
+  newNode.insertAfter(node);
+  editNode(newNode);
+  saveChanges();
+}
+
+function addNewProjectNodeAfter(node) {
+  var lastNode = node.nextUntil(".project");
+  if (lastNode.size() == 0) lastNode = node;
+  addNewNodeAfter(lastNode, "New Project", ["item", "project"]);
+}
 
 function selectNode(node) {
   if (state.currentNode != null) {
