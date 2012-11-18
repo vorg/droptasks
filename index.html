@@ -205,12 +205,9 @@ function addNewProjectNodeAfter(node) {
 
 function selectNode(node) {
   if (state.currentNode != null) {
-    if (state.editMode && !state.currentNode.text().trim()) {
-      state.currentNode.text("-");
-      state.editMode = false;
+    if (state.editMode) {
+      exitEditNode(state.currentNode);
     }
-    state.currentNode.removeAttr("contenteditable");
-    state.currentNode.blur();
     state.currentNode.removeClass("current");
   }
   state.currentNode = node;
@@ -317,8 +314,13 @@ function editNode(node) {
 
 function exitEditNode(node) {
   parseNodeTags(node);
-  selectNode(node); //cancels edit mode
+  state.currentNode.removeAttr("contenteditable");
+  state.currentNode.blur();
+  if (!state.currentNode.text().trim()) {
+    state.currentNode.text("-");
+  }
   state.editMode = false;
+  state.editModePrevText = "";
   saveChanges();
 }
 
@@ -329,6 +331,7 @@ function parseNodeTags(node) {
   var tags = task.match(/(?:@)[a-zA-Z0-9\-]+/g);
   var classNames = ["node"];
   if (node.hasClass("project")) classNames.push("project");
+  if (node.hasClass("current")) classNames.push("current");
   if (tags) classNames =  classNames.concat(tags.map(function(tag) { return tag.replace("@", "")} ));
   node.removeClass(node.attr("class"));
   classNames.forEach(function(c) {
