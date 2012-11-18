@@ -14,6 +14,7 @@ html, body {
   column-gap: 5px;
   -moz-column-gap: 5px;
   -webkit-column-gap: 5px;
+  xcolumn-fill: balance;
 }
 
 .project {
