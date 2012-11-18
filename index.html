@@ -204,6 +204,7 @@ function addNewProjectNodeAfter(node) {
 }
 
 function selectNode(node) {
+  if (node == state.currentNode) return;
   if (state.currentNode != null) {
     if (state.editMode) {
       exitEditNode(state.currentNode);
@@ -303,6 +304,7 @@ function editNode(node) {
   if (node != state.selectNode) {
     selectNode(node);
   }
+  if (state.editMode && node == state.currentNode) return;
   node.attr("contentEditable", "").focus();
   if (node.text() == "-") {
     node.text("");
