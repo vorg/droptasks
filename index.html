@@ -114,12 +114,21 @@ window.addEventListener('keydown', function(e) {
       if (!state.editMode) {
         if (e.metaKey) { //move up
           if (state.currentNode.hasClass("project")) {
+            var prev = state.currentNode.prevUntil(".project");
+            if (prev.size() == 0) prev = state.currentNode;
+            var prevProject = prev.last().prev();
+            if (prevProject.size() > 0) {
+              var projectItems = state.currentNode.nextUntil(".project").andSelf();
+              prevProject.before(projectItems);
+              saveChanges();
+            }
           }
           else {
             //we can move nodes only withing the project
             var prev = state.currentNode.prev();
             if (prev.size() > 0 && !prev.hasClass("project")) {
               prev.before(state.currentNode);
+              saveChanges();
             }
           }
         }
@@ -139,12 +148,23 @@ window.addEventListener('keydown', function(e) {
       if (!state.editMode) {
         if (e.metaKey) { //move up
           if (state.currentNode.hasClass("project")) {
+            if (state.currentNode.hasClass("project")) {
+              var next = state.currentNode.nextUntil(".project");
+              var nextProject = next.last().next();
+              if (next.size() == 0) nextProject = state.currentNode.next();
+              if (nextProject.size() > 0) {
+                var nextProjectItems = nextProject.nextUntil(".project").andSelf();
+                state.currentNode.before(nextProjectItems);
+                saveChanges();
+              }
+            }
           }
           else {
             //we can move nodes only withing the project
             var next = state.currentNode.next();
             if (next.size() > 0 && !next.hasClass("project")) {
               next.after(state.currentNode);
+              saveChanges();
             }
           }
         }
