@@ -112,15 +112,20 @@ window.addEventListener('keydown', function(e) {
      break;
     case 38: //Up
       if (!state.editMode) {
-    //    if (e.metaKey) { //move up
-    //      var prev = state.currentNode.prev();
-    //      if (prev.size() > 0) {
-    //        prev.before(state.currentNode);
-    //      }
-    //    }
-    //    else {
+        if (e.metaKey) { //move up
+          if (state.currentNode.hasClass("project")) {
+          }
+          else {
+            //we can move nodes only withing the project
+            var prev = state.currentNode.prev();
+            if (prev.size() > 0 && !prev.hasClass("project")) {
+              prev.before(state.currentNode);
+            }
+          }
+        }
+        else {
             selectPrevNode(state.currentNode);
-    //    }
+        }
         e.preventDefault();
       }
       break;
@@ -132,15 +137,20 @@ window.addEventListener('keydown', function(e) {
       break;
     case 40: //Down
       if (!state.editMode) {
-        //if (e.metaKey) { //move up
-        //  var next = state.currentNode.next();
-        //  if (next.size() > 0) {
-        //    next.after(state.currentNode);
-        //  }
-        //}
-        //else {
-            selectNextNode(state.currentNode);
-        //}
+        if (e.metaKey) { //move up
+          if (state.currentNode.hasClass("project")) {
+          }
+          else {
+            //we can move nodes only withing the project
+            var next = state.currentNode.next();
+            if (next.size() > 0 && !next.hasClass("project")) {
+              next.after(state.currentNode);
+            }
+          }
+        }
+        else {
+          selectNextNode(state.currentNode);
+        }
         e.preventDefault();
       }
       break;
