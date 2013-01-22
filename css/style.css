@@ -62,3 +62,8 @@ html, body {
 .tag {
   color: #CCCCCC;
 }
+
+.onlyNext .node { display: none; }
+.onlyNext .project { display: block; }
+.onlyNext .next { display: block; }
+

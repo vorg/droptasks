@@ -18,7 +18,7 @@ var nodeTmpl;
 var state = {
   prev: null,
   cur: null,
-  undoStack: []
+  undoStack: [],
 };
 
 function init() {
@@ -57,6 +57,10 @@ function deserialize(data) {
   }
 }
 
+function toggleNext() {
+  $(document.body).toggleClass('onlyNext');
+}
+
 window.addEventListener('keydown', function(e) {
   //state.edited = true;
 
@@ -64,6 +68,7 @@ window.addEventListener('keydown', function(e) {
     var c = String.fromCharCode(e.charCode || e.keyCode);
     switch(c) {
       case 'Z': undo(); break;
+      case 'N': toggleNext(); break;
       //case 'S': saveData(); break;
       //case 'L': loadData(); break;
     }
