@@ -57,9 +57,34 @@ function deserialize(data) {
   }
 }
 
-function toggleNext() {
+function toggleShowNext() {
   $(document.body).toggleClass('onlyNext');
 }
+
+function toggleTag(name) {
+  if (state.currentNode.hasClass(name)) {
+    state.currentNode.removeClass(name);
+    var text = state.currentNode.text();
+    text = text.replace(new RegExp("@" + name + " "), "");
+    text = text.replace(new RegExp("@" + name + "$"), "");
+    text = text.trim();
+    state.currentNode.text(text);
+  }
+  else {
+    state.currentNode.addClass(name);
+    state.currentNode.text(state.currentNode.text() + " @" + name)
+  }
+}
+
+function toggleNext() {
+  toggleTag("next");
+}
+
+
+function toggleDone() {
+  toggleTag("done");
+}
+
 
 window.addEventListener('keydown', function(e) {
   //state.edited = true;
@@ -69,8 +94,18 @@ window.addEventListener('keydown', function(e) {
     switch(c) {
       case 'Z': undo(); break;
       case 'N': toggleNext(); break;
+      case 'D': toggleDone(); break;
       //case 'S': saveData(); break;
       //case 'L': loadData(); break;
+    }
+    e.preventDefault();
+    return;
+  }
+
+  if (!state.editMode && e.shiftKey) {
+    var c = String.fromCharCode(e.charCode || e.keyCode);
+    switch(c) {
+      case 'N': toggleShowNext(); break;
     }
     e.preventDefault();
     return;
