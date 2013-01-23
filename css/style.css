@@ -66,4 +66,5 @@ html, body {
 .onlyNext .node { display: none; }
 .onlyNext .project { display: block; }
 .onlyNext .next { display: block; }
+.onlyNext .next.done { display: none; }
 
