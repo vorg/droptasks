@@ -104,11 +104,14 @@ window.addEventListener('keydown', function(e) {
 
   if (!state.editMode && e.shiftKey) {
     var c = String.fromCharCode(e.charCode || e.keyCode);
+    var handled = false;
     switch(c) {
-      case 'N': toggleShowNext(); break;
+      case 'N': toggleShowNext(); handled = true; break;
     }
-    e.preventDefault();
-    return;
+    if (handled) {
+      e.preventDefault();
+      return;
+    }
   }
 
   if (state.currentNode == null) return;
