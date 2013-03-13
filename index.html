@@ -90,6 +90,8 @@ function toggleTag(name) {
     state.currentNode.addClass(name);
     state.currentNode.text(state.currentNode.text() + " @" + name)
   }
+
+  saveChanges();
 }
 
 function toggleNext() {
