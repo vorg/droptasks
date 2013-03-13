@@ -59,6 +59,22 @@ function deserialize(data) {
 
 function toggleShowNext() {
   $(document.body).toggleClass('onlyNext');
+  var currProject = null;
+  var hasTag = false;
+  $(".node").each(function() {
+    if ($(this).hasClass('project')) {
+      if (!hasTag && currProject != null) currProject.hide();
+      currProject = $(this);
+      hasTag = false;
+    }
+    if ($(this).hasClass('next') && !$(this).hasClass('done')) { hasTag = true; };
+  });
+
+  if (!hasTag && currProject != null) currProject.hide();
+
+  if (!$("body").hasClass('onlyNext')) {
+    $(".node.project").show();
+  }
 }
 
 function toggleTag(name) {
