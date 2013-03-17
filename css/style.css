@@ -68,3 +68,5 @@ html, body {
 .onlyNext .next { display: block; }
 .onlyNext .next.done { display: none; }
 
+.focus { padding: 5% 0 0 40%; }
+

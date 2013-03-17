@@ -77,6 +77,34 @@ function toggleShowNext() {
   }
 }
 
+function toggleFocus() {
+  if ($(document.body).hasClass('focus')) {
+    $(document.body).removeClass('focus');
+    $(".node:hidden").show();
+    return;
+  }
+
+  if (!state.currentNode || !state.currentNode.hasClass('project')) return;
+
+  $(document.body).addClass('focus');
+
+  var inProject = false;
+  $(".node").each(function() {
+    if (inProject && $(this).hasClass('project')) {
+      inProject = false;
+    }
+
+    if (state.currentNode.get(0) == this) {
+      inProject = true;
+    }
+
+    if (!inProject) {
+      $(this).hide();
+    }
+  });
+
+}
+
 function toggleTag(name) {
   if (state.currentNode.hasClass(name)) {
     state.currentNode.removeClass(name);
@@ -125,6 +153,7 @@ window.addEventListener('keydown', function(e) {
     var handled = false;
     switch(c) {
       case 'N': toggleShowNext(); handled = true; break;
+      case 'F': toggleFocus(); handled = true; break;
     }
     if (handled) {
       e.preventDefault();
