@@ -70,3 +70,16 @@ html, body {
 
 .focus { padding: 5% 0 0 40%; }
 
+#calendar {
+  height: auto;
+}
+
+.weekDay {
+  background: #AAA;
+  color: #FFF;
+}
+
+#items {
+  border-top: 5px solid #333;
+}
+

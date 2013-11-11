@@ -8,7 +8,37 @@ state = {
 
 init = () ->
   nodeTmpl = $('#nodeTmpl').html()
+  initCalendar()
   loadTaskFile('http://localhost:3001/?get')
+
+initCalendar = () ->
+  past = { label: 'Past', tasks: []}
+  future = { label: 'Future', tasks: []}
+  days = [past]
+  for i in [0..3]
+    dayDate = Date.today().add(i).days()
+    dayName = dayDate.toString('dddd')
+    days.push({ label: dayName, date: dayDate, tasks : []})
+
+  days.push(future)
+
+  state.days = days
+
+  updateCalendar()
+
+updateCalendar = () ->
+  $('#calendar.columns').empty()
+  for day in state.days
+    node = $($.mustache(nodeTmpl, { text : day.label, className : 'weekDay' }))
+    $('#calendar.columns').eq(0).append(node)
+    for task in day.tasks
+      taskLabel = task
+      tagIndex = taskLabel.indexOf('@')
+      #if tagIndex
+        #taskLabel = taskLabel.substr(0, tagIndex-1)
+
+      taskNode = $($.mustache(nodeTmpl, { text : taskLabel, className : '' }))
+      $('#calendar.columns').eq(0).append(taskNode)
 
 loadTaskFile = (file) ->
   $.get file, (data) ->
@@ -56,6 +86,7 @@ deserialize = (data) ->
       task = task.replace(/\s*-\s*/, '')
       newNode = createNode(task, [])
       parseNodeTags(newNode)
+  updateCalendar()
 
 createNode = (text, classNames) ->
   node = $($.mustache(nodeTmpl, { text : text, className : classNames.join(' ') }))
@@ -146,7 +177,16 @@ parseNodeTags = (node) ->
   task = node.text()
   task = task.replace(/(@[^(\s]+\(*[^)]*\)*)/, '<span class="tag">$1</span>')
   if !task then task = '-'
-  tags = task.match(/(?:@)[a-zA-Z0-9\-]+/g)
+  tags = task.match(/(?:@)[\(\) \:a-zA-Z0-9\-]+/g)
+  if tags
+    for tag in tags
+      if tag.indexOf('@due') != -1
+        dueDate = tag.match(/\(([^\)]+)\)/)
+        if dueDate
+          dueDate = new Date(dueDate[1].split(' ')[0])
+          for day in state.days
+            if day.date && dueDate.compareTo(day.date) == 0
+              day.tasks.push(task)
   classNames = ['node']
   if node.hasClass('project') then classNames.push('project')
   if node.hasClass('current') then classNames.push('current')
