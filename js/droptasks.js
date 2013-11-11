@@ -305,6 +305,7 @@ parseNodeTags = function(node) {
     }
   }
   classNames = ['node'];
+  node.html(task);
   if (node.hasClass('project')) {
     classNames.push('project');
   }

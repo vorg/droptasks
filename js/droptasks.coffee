@@ -188,6 +188,7 @@ parseNodeTags = (node) ->
             if day.date && dueDate.compareTo(day.date) == 0
               day.tasks.push(task)
   classNames = ['node']
+  node.html(task)
   if node.hasClass('project') then classNames.push('project')
   if node.hasClass('current') then classNames.push('current')
   if tags then classNames =  classNames.concat(tags.map((tag) -> tag.replace('@', '')))
