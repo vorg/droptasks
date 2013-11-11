@@ -11,7 +11,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <script type="text/tmpl" id="nodeTmpl">
-  <li class="node {{className}}">{{{text}}}</li>
+  <li class="node {{className}}" data-project="{{project}}">{{{text}}} <span class="projectLabel">{{projectLabel}}</span></li>
+</script>
+<script type="text/tmpl" id="weekDayTmpl">
+  <div class="weekDayColumn">
+    <ul></ul>
+  </div>
 </script>
 <body>
   <ul id="calendar" class="columns"></ul>

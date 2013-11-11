@@ -1,4 +1,5 @@
 nodeTmpl = null
+weekDayTmpl = null
 
 state = {
   prev: null
@@ -8,6 +9,7 @@ state = {
 
 init = () ->
   nodeTmpl = $('#nodeTmpl').html()
+  weekDayTmpl = $('#weekDayTmpl').html()
   initCalendar()
   loadTaskFile('http://localhost:3001/?get')
 
@@ -27,18 +29,22 @@ initCalendar = () ->
   updateCalendar()
 
 updateCalendar = () ->
-  $('#calendar.columns').empty()
+  $('#calendar').empty()
   for day in state.days
-    node = $($.mustache(nodeTmpl, { text : day.label, className : 'weekDay' }))
-    $('#calendar.columns').eq(0).append(node)
+    weekDayColumn = $($.mustache(weekDayTmpl, {}))
+    weekDayColumnList = weekDayColumn.find('ul')
+    $('#calendar').eq(0).append(weekDayColumn)
+    dayNode = $($.mustache(nodeTmpl, { text : day.label, className : 'weekDay' }))
+    weekDayColumn.prepend(dayNode)
     for task in day.tasks
-      taskLabel = task
-      tagIndex = taskLabel.indexOf('@')
-      #if tagIndex
-        #taskLabel = taskLabel.substr(0, tagIndex-1)
+      taskLabel = task.label
+      tagIndex = taskLabel.indexOf('<')
+      if tagIndex
+        taskLabel = taskLabel.substr(0, tagIndex-1)
+      taskNode = $($.mustache(nodeTmpl, { text : taskLabel, className : '', projectLabel: task.project }))
+      weekDayColumnList.append(taskNode)
 
-      taskNode = $($.mustache(nodeTmpl, { text : taskLabel, className : '' }))
-      $('#calendar.columns').eq(0).append(taskNode)
+  $('#items').css('height', $(window).height() - $('#calendar').height() - 20);
 
 loadTaskFile = (file) ->
   $.get file, (data) ->
@@ -75,21 +81,23 @@ deserialize = (data) ->
   lines = data.split('\n');
 
   nodesInProject = 0
+  currentProject = ''
   for line in lines
     line = line.trim()
     if line.length == 0 then continue
     if isProject(line)
       projectName = line.substr(0, line.length)
+      currentProject = projectName.replace(':', '')
       createNode(projectName, ['project'])
     else
       task = line
       task = task.replace(/\s*-\s*/, '')
-      newNode = createNode(task, [])
+      newNode = createNode(task, [], currentProject)
       parseNodeTags(newNode)
   updateCalendar()
 
-createNode = (text, classNames) ->
-  node = $($.mustache(nodeTmpl, { text : text, className : classNames.join(' ') }))
+createNode = (text, classNames, currentProject) ->
+  node = $($.mustache(nodeTmpl, { text : text, className : classNames.join(' '), project : currentProject }))
   node.click(() -> selectNode(node))
   node.dblclick(() -> editNode(node))
   #we have to add it to dom so we can measure it's size with CSS applied
@@ -186,7 +194,11 @@ parseNodeTags = (node) ->
           dueDate = new Date(dueDate[1].split(' ')[0])
           for day in state.days
             if day.date && dueDate.compareTo(day.date) == 0
-              day.tasks.push(task)
+              day.tasks.push({label:task, project:node.data('project')})
+          if dueDate.compareTo(state.days[1].date) == -1
+            state.days[0].tasks.push({label:task, project:node.data('project')})
+          if dueDate.compareTo(state.days[state.days.length-2].date) == 1
+            state.days[state.days.length-1].tasks.push({label:task, project:node.data('project')})
   classNames = ['node']
   node.html(task)
   if node.hasClass('project') then classNames.push('project')
