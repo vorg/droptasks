@@ -236,6 +236,66 @@ exitEditNode = (node) ->
   state.editModePrevText = ''
   saveChanges()
 
+toggleShowNext = () ->
+  $(document.body).toggleClass('onlyNext')
+  currProject = null
+  hasTag = false
+  $('#items .node').each(() ->
+    if ($(this).hasClass('project'))
+      if !hasTag && currProject != null
+        currProject.hide()
+      currProject = $(this)
+      hasTag = false;
+
+    if $(this).hasClass('next') && !$(this).hasClass('done')
+      hasTag = true
+  )
+
+  if !hasTag && currProject != null
+    currProject.hide()
+
+  if !$('body').hasClass('onlyNext')
+    $('#items .node.project').show()
+
+
+toggleFocus = () ->
+  if $(document.body).hasClass('focus')
+    $(document.body).removeClass('focus')
+    $('.node:hidden').show()
+    return
+
+  if !state.currentNode || !state.currentNode.hasClass('project') then return
+
+  $(document.body).addClass('focus')
+
+  inProject = false
+  $('.node').each(() ->
+    if inProject && $(this).hasClass('project') then inProject = false
+    if state.currentNode.get(0) == this then inProject = true
+    if !inProject then $(this).hide()
+  )
+
+toggleTag = (name) ->
+  if state.currentNode.hasClass(name)
+    state.currentNode.removeClass(name)
+    text = state.currentNode.text()
+    text = text.replace(new RegExp('@' + name + ' '), '')
+    text = text.replace(new RegExp('@' + name + '$'), '')
+    text = text.trim()
+    state.currentNode.text(text)
+  else
+    state.currentNode.addClass(name)
+    state.currentNode.text(state.currentNode.text() + ' @' + name)
+
+  saveChanges()
+
+toggleNext = () ->
+  toggleTag('next')
+
+
+toggleDone = () ->
+  toggleTag('done')
+
 handleKeyCommands = (e) ->
   c = String.fromCharCode(e.charCode || e.keyCode)
   if e.ctrlKey
