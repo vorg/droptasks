@@ -94,3 +94,6 @@ html, body {
   border-top: 5px solid #333;
 }
 
+.hidden {
+  display: none;
+}

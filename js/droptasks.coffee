@@ -296,6 +296,13 @@ toggleNext = () ->
 toggleDone = () ->
   toggleTag('done')
 
+toggleShowCalendar = () ->
+  if $('#calendar').hasClass('hidden')
+    $('#calendar').removeClass('hidden')
+    $('#items').css('height', $(window).height() - $('#calendar').height() - 20);
+  else
+    $('#items').css('height', $(window).height());
+    $('#calendar').addClass('hidden')
 
 
 handleKeyCommands = (e) ->
@@ -309,6 +316,7 @@ handleKeyCommands = (e) ->
   if e.shiftKey
     switch c
       when 'N' then toggleShowNext()
+      when 'C' then toggleShowCalendar()
       when 'F' then toggleFocus()
 
 handleMoveCommands = (e) ->
