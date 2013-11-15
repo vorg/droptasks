@@ -114,7 +114,7 @@ serialize = function() {
           value = value + ':';
         }
       }
-      str += value;
+      str += value.trim();
     } else {
       str += '\t- ' + value;
     }

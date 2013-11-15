@@ -70,7 +70,7 @@ serialize = () ->
           value = value.substr(0, atIndex).trim() + ': ' + value.substr(atIndex)
         else
           value = value + ':'
-      str += value
+      str += value.trim()
     else
       str += '\t- ' + value
     str += '\n'
