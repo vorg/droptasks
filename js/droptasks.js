@@ -8,7 +8,8 @@ weekDayTmpl = null;
 state = {
   prev: null,
   cur: null,
-  undoStack: []
+  undoStack: [],
+  editMode: false
 };
 
 init = function() {
@@ -100,7 +101,7 @@ serialize = function() {
   var str;
 
   str = '';
-  $('.node').each(function() {
+  $('#items .node').each(function() {
     var atIndex, value;
 
     value = $(this).text();
@@ -295,7 +296,7 @@ parseNodeTags = function(node) {
   if (tags) {
     for (_i = 0, _len = tags.length; _i < _len; _i++) {
       tag = tags[_i];
-      if (tag.indexOf('@due') !== -1) {
+      if (tag.indexOf('@due') !== -1 && task.indexOf('@done') === -1) {
         dueDate = tag.match(/\(([^\)]+)\)/);
         if (dueDate) {
           dueDate = new Date(dueDate[1].split(' ')[0]);
@@ -677,8 +678,9 @@ saveChanges = function(options) {
   console.log('saveChanges', dontPush);
   if (!dontPush) {
     state.undoStack.push(state.prev);
-    return state.prev = currentState;
+    state.prev = currentState;
   }
+  return $.post('?set', currentState);
 };
 
 $(document).ready(init);

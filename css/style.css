@@ -79,7 +79,7 @@ html, body {
 }
 
 .weekDayColumn ul {
-  height: 200px;
+  height: 300px;
   overflow: scroll;
 }
 

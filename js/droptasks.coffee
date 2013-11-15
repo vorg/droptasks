@@ -5,6 +5,7 @@ state = {
   prev: null
   cur: null
   undoStack: []
+  editMode: false
 }
 
 init = () ->
@@ -60,7 +61,7 @@ isProject = (line) ->
 
 serialize = () ->
   str = ''
-  $('.node').each ->
+  $('#items .node').each ->
     value = $(this).text()
     if $(this).hasClass('project')
       if value.indexOf(':') is -1
@@ -188,7 +189,7 @@ parseNodeTags = (node) ->
   tags = task.match(/(?:@)[\(\) \:a-zA-Z0-9\-]+/g)
   if tags
     for tag in tags
-      if tag.indexOf('@due') != -1
+      if tag.indexOf('@due') != -1 && task.indexOf('@done') == -1
         dueDate = tag.match(/\(([^\)]+)\)/)
         if dueDate
           dueDate = new Date(dueDate[1].split(' ')[0])
@@ -292,9 +293,10 @@ toggleTag = (name) ->
 toggleNext = () ->
   toggleTag('next')
 
-
 toggleDone = () ->
   toggleTag('done')
+
+
 
 handleKeyCommands = (e) ->
   c = String.fromCharCode(e.charCode || e.keyCode)
@@ -447,6 +449,6 @@ saveChanges = (options) ->
   if !dontPush
     state.undoStack.push(state.prev)
     state.prev = currentState
-  #$.post('?set', currentState)
+  $.post('?set', currentState)
 
 $(document).ready(init)
