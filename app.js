@@ -3,6 +3,9 @@ var fs = require('fs');
 var path = require('path');
 var url = require('url');
 
+var taskFile = "/Users/vorg/Dropbox/Tasks/tasks.taskpaper";
+var backupDir = null; //"/Users/vorg/Documents/Bak/Tasks/"
+
 var mimeTypes = {
   "html": "text/html",
   "jpeg": "image/jpeg",
@@ -38,11 +41,11 @@ http.createServer(function (request, response) {
       if (uri == "/") {
         if (urlParams.get !== undefined) {
           response.writeHead(200, { 'Content-Type' : "plain/txt" });
-          response.end(fs.readFileSync("/Users/vorg/Dropbox/Tasks/tasks.taskpaper", "utf-8"));
+          response.end(fs.readFileSync(taskFile, "utf-8"));
         }
         else if (urlParams.set !== undefined) {
-          responseStr = fs.writeFileSync("/Users/vorg/Dropbox/Tasks/tasks.taskpaper", body);
-          fs.writeFileSync("/Users/vorg/Documents/Bak/Tasks/" + (new Date()).getTime() + ".taskpaper", body);
+          responseStr = fs.writeFileSync(taskFile, body);
+          if (backupDir) fs.writeFileSync(backupDir + (new Date()).getTime() + ".taskpaper", body);
           response.writeHead(200, { 'Content-Type' : "plain/txt" });
           response.end("ok");
         }
