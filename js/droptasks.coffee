@@ -147,15 +147,16 @@ selectNextNode = (node, className) ->
   selectNode next  if next.size() > 0
 
 selectNodeOnTheLeft = (node) ->
-  yPos = node.position().top
+  itemsTop = $('#items').position().top
+  yPos = node.position().top - itemsTop
   sibling = node.prev()
   columns = 0
   closesDistance = -1
   closestNode = null
   while sibling.size() > 0
-    siblingY = sibling.position().top
+    siblingY = sibling.position().top - itemsTop
     siblingDistance = Math.abs(siblingY - yPos)
-    if siblingY is 0
+    if siblingY < 10
       ++columns
       break if columns is 2
     if columns is 1 and closesDistance is -1 or siblingDistance < closesDistance
@@ -165,15 +166,16 @@ selectNodeOnTheLeft = (node) ->
   selectNode closestNode  if closestNode
 
 selectNodeOnTheRight = (node) ->
-  yPos = node.position().top
+  itemsTop = $('#items').position().top
+  yPos = node.position().top - itemsTop
   sibling = node.next()
   columns = 0
   closesDistance = -1
   closestNode = null
   while sibling.size() > 0
-    siblingY = sibling.position().top
+    siblingY = sibling.position().top - itemsTop
     siblingDistance = Math.abs(siblingY - yPos)
-    if siblingY is 0
+    if siblingY < 10
       ++columns
       break  if columns >= 2
     if columns is 1 and closesDistance is -1 or siblingDistance < closesDistance
@@ -191,7 +193,7 @@ parseNodeTags = (node) ->
     for tag in tags
       if tag.indexOf('@due') != -1 && task.indexOf('@done') == -1
         dueDate = tag.match(/\(([^\)]+)\)/)
-        if dueDate
+        if dueDate && state.days
           dueDate = new Date(dueDate[1].split(' ')[0])
           for day in state.days
             if day.date && dueDate.compareTo(day.date) == 0
